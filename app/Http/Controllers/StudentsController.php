@@ -71,7 +71,7 @@ class StudentsController extends Controller
         //
 
         // return view('students/show', ['student' => $student]);
-        return view('students/show', compact('student'));
+        return view('students.show', compact('student'));
     }
 
     /**
@@ -83,6 +83,7 @@ class StudentsController extends Controller
     public function edit(Student $student)
     {
         //
+        return view ('students.edit', compact('student'));
     }
 
     /**
@@ -95,6 +96,22 @@ class StudentsController extends Controller
     public function update(Request $request, Student $student)
     {
         //
+            $request->validate([
+            'nama' => 'required',
+            'nrp' => 'required|size:9',
+            'email' => 'required',
+            'jurusan' => 'required'
+        ]);
+
+        $student::where('id', $student->id)
+        ->update([
+            'nama' => $request->nama,
+            'nrp' => $request->nrp,
+            'email' => $request->email,
+            'jurusan' => $request->jurusan
+            
+         ]);
+      return redirect('/students')->with('status', 'Data Mahasiswa Baru Berhasil Diubah!');
     }
 
     /**
@@ -106,5 +123,8 @@ class StudentsController extends Controller
     public function destroy(Student $student)
     {
         //
+        $student::destroy($student->id);
+      
+        return redirect('/students')->with('status', 'Data Mahasiswa Baru Berhasil Dihapus!');
     }
 }
